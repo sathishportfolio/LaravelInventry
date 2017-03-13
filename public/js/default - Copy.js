@@ -1,12 +1,8 @@
 $( document ).ready(function() {
 
-    $( ".search_supplier_name" ).on('keyup',function(){
-        $(".search_supplier_name_empty").hide();
-    });
-
     $(document).on('click', '.add_sales_product', function(){
 
-        $('.sales_container').append('<tr><td><input type="text" class="form-control search_purchase_category_name" placeholder="Type here ..." name="category_name[]" autocomplete="off"><span class="help-block search_purchase_category_name_empty glyphicon" style="display: none;"> No Results Found </span><input type="hidden" class="search_category_id" name="category_id[]"></td><td width="250px"><select class="form-control stock_id" name="stock_id[]"><option selected="" disabled="" value="">select</option></select><span class="search_stock_quantity"></span></td><td width="200px"><input type="text" class="form-control search_purchase_cost" name="purchase_cost[]" readonly=""></td><td width="150px"><input type="text" class="form-control search_selling_cost" name="selling_cost[]" ></td><td width="50px"><input type="hidden" class="search_stock_quantity" name="opening_stock[]"><input type="hidden" name="closing_stock[]" class="closing_stock"><input type="number" class="form-control change_sales_quantity" name="sales_quantity[]" min="1"><small class="help-block max_stock" style="display: none;">Insufficient Stock</small></td><td width="100px"><input type="text" class="form-control stock_total" name="sub_total[]" readonly=""></td><td><button type="button" class="btn btn-danger remove_tr">&times;</button></td></tr>');
+        $('.sales_container').append('<tr><td><input type="text" class="form-control search_purchase_category_name" placeholder="Type here ..." name="category_name" autocomplete="off"><span class="help-block search_purchase_category_name_empty glyphicon" style="display: none;"> No Results Found </span><input type="hidden" class="search_category_id" name="category_id"></td><td width="250px"><select class="form-control stock_id" name="stock_id"><option selected="" disabled="" value="">select</option></select></td><td width="200px"><input type="text" class="form-control search_purchase_cost" name="purchase_cost" readonly=""></td><td width="150px"><input type="text" class="form-control search_selling_cost" name="selling_cost" ></td><td width="100px"><input type="text" class="form-control search_stock_quantity" name="opening_stock" readonly=""></td><td width="50px"><input type="number" class="form-control change_sales_quantity" name="sales_quantity" min="1"></td><td><button type="button" class="btn btn-danger remove_tr">&times;</button></td></tr>');
 
         $( ".search_purchase_category_name" ).autocomplete({
           source: "/search/purchase_category_name",
@@ -29,7 +25,7 @@ $( document ).ready(function() {
             $(this).next().next().val(ui.item.id);
 
             var select = $(this).parent().next().children(':first-child');
-
+            
             select.empty().append('<option selected="" disabled="" value="">- Select -</option>');
 
             $.each( ui.item.stocks , function( key, value ) {
@@ -38,297 +34,11 @@ $( document ).ready(function() {
 
           }
         });
-
-        calculate_sales();
-    });
-
-    $(document).on('click', '.add_purchase_product', function(){
-
-        $('.purchase_container').append('<tr><td><input type="text" class="form-control search_purchase_category_name" placeholder="Type here ..." name="category_name[]" autocomplete="off"><span class="help-block search_purchase_category_name_empty" style="display: none;">No Results Found ...</span><input type="hidden" class="search_category_id" name="category_id[]"></td><td width="250px"><select class="form-control purchase_stock_id" name="stock_id[]"><option selected="" disabled="" value="">select</option></select><span></span></td><td width="150px"><input type="hidden" class="search_stock_quantity" name="opening_stock[]"><input type="hidden" class="closing_stock" name="closing_stock[]"><input type="text" class="form-control change_purchase_quantity" name="purchase_quantity[]" min="0" autocomplete="off"></td><td width="200px"><input type="text" class="form-control search_purchase_cost" name="purchase_cost[]"></td><td width="150px"><input type="text" class="form-control stock_total" name="sub_total[]"  readonly=""></td><td><button type="button" class="btn btn-danger remove_tr">&times;</button></td></tr>');
-
-        $( ".search_purchase_category_name" ).autocomplete({
-          source: "/search/purchase_category_name",
-          minLength: 1,
-          response: function(event, ui) {
-                if (ui.content.length === 0) {
-
-                    $(this).parent().addClass('has-error');
-                    $(this).next().removeClass('glyphicon-ok').addClass('glyphicon-remove');
-                    $(this).next().show();
-                    $('.form_submit').hide();
-
-                } else {
-                    $(this).next().hide();
-                    $('.form_submit').show();
-                }
-            },
-          select: function(event, ui) {
-
-            $(this).next().next().val(ui.item.id);
-
-            var select = $(this).parent().next().children(':first-child');
-
-            select.empty().append('<option selected="" disabled="" value="">- Select -</option>');
-
-            $.each( ui.item.stocks , function( key, value ) {
-                select.append('<option title="'+value.title+'" purchase_cost="'+value.purchase_cost+'" selling_cost="'+value.selling_cost+'" opening_stock="'+value.opening_stock+'" value='+key+'>'+value.dimention+'</option>');
-            });
-
-          }
-        });
-
-        calculate_purchase();
     });
 
     $(document).on('click', '.remove_tr', function(){
         $(this).closest('tr').remove();
-        calculate_sales();
     });
-
-    $(document).on('change','.stock_id',function(){
-
-        $(this).parent().next().children(':first-child').val($(this).find(':selected').attr('purchase_cost'));
-
-        $(this).parent().next().next().children(':first-child').val($(this).find(':selected').attr('selling_cost'));
-
-        $(this).parent().next().next().next().find(':nth-child(1)').val($(this).find(':selected').attr('opening_stock'));
-
-        $(this).parent().next().next().next().find(':nth-child(3)').attr('max',$(this).find(':selected').attr('opening_stock'));
-
-        $(this).next().html('Available Stocks : '+$(this).find(':selected').attr('opening_stock'));
-
-        calculate_sales();
-
-    });
-
-    $(document).on('change','.purchase_stock_id',function(){
-
-        var purchase_cost = $(this).find(':selected').attr('purchase_cost');
-        var opening_stock = $(this).find(':selected').attr('opening_stock');
-
-        $(this).next().html('Available Stocks : '+$(this).find(':selected').attr('opening_stock'));
-
-        $(this).parent().next().children(':first-child').val(opening_stock);
-
-        $(this).parent().next().next().children(':first-child').val(purchase_cost);
-
-        $(this).parent().next().next().next().find(':nth-child(1)').val();
-
-        calculate_purchase();
-
-    });
-
-    $(document).on('keyup','.change_sales_quantity',function(){
-
-        if(  parseInt( $(this).val() ) >  parseInt( $(this).attr('max') ) ){
-            $(this).parent().addClass('has-error');
-            $(this).next().removeClass('glyphicon-ok').addClass('glyphicon-remove');
-            $('.form_submit,.add_sales_product').hide();
-            $('.max_stock').show();
-        }else{
-            $(this).parent().removeClass('has-error');
-            $('.form_submit,.add_sales_product').show();
-            $('.max_stock').hide();
-        }
-
-        var quantity = parseFloat($(this).val()).toFixed(2);
-
-        var cost = parseFloat( $(this).parent().prev().children(':first-child').val() ).toFixed(2);
-
-        var total = parseFloat(quantity*cost || 0).toFixed(2);
-
-        $(this).parent().next().children(':first-child').val(total);
-
-        var opening = parseInt( $(this).prev().prev().val() );
-
-        $(this).prev().val( parseInt(opening - quantity) );
-
-        calculate_sales();
-        
-    });
-
-    $(document).on('keyup','.change_purchase_quantity',function(){
-
-        var quantity = parseInt($(this).val()).toFixed(2);
-
-        var cost = parseFloat( $(this).parent().next().children(':first-child').val() ).toFixed(2);
-
-        var total = parseFloat(quantity*cost || 0).toFixed(2);
-
-        $(this).parent().next().next().children(':first-child').val(total);
-
-        var opening = parseInt( $(this).prev().prev().val() );
-
-        $(this).prev().val( parseInt(opening) + parseInt(quantity) );
-
-        calculate_purchase();
-        
-    });
-
-    $(document).on('keyup','.search_selling_cost',function(){
-
-        var quantity = parseFloat( $(this).parent().next().find(':nth-child(3)').val() ).toFixed(2);
-
-        var cost = parseFloat( $(this).val() ).toFixed(2);
-
-        var total = parseFloat(quantity*cost || 0).toFixed(2);
-
-        $(this).parent().next().next().children(':first-child').val(total);
-
-        calculate_sales();
-        
-    });
-
-    $('.sales_discount_percent').on('keyup',function(){
-
-        var discount_percent = parseFloat( $(this).val() || 0).toFixed(2); 
-        var sub_total = parseFloat($('.sales_total').val()).toFixed(2);
-        var tax = parseFloat($('.sales_tax_amount').val()).toFixed(2);
-        var discount = parseFloat( (sub_total * discount_percent)/100 ).toFixed(2);
-
-        $('.sales_discount_amount').val(discount || 0);
-
-        calculate_sales();
-
-    });
-
-    $('.sales_discount_amount').on('keyup',function(){
-
-        var discount = parseFloat($(this).val() || 0).toFixed(2); 
-        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
-        var tax = parseFloat($('.sales_tax_amount').val() || 0).toFixed(2);
-        var discount_percent = ((discount*100)/sub_total || 0).toFixed(2);
-
-        $('.sales_discount_percent').val(discount_percent || 0);
-
-        calculate_sales();
-
-    });
-
-    $('.sales_tax_percent').on('keyup',function(){
-
-        var tax_percent = parseFloat($(this).val() || 0).toFixed(2); 
-        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
-        var discount = parseFloat($('.sales_discount_amount').val() || 0).toFixed(2);
-
-        var tax = parseFloat( (sub_total * tax_percent)/100 || 0 ).toFixed(2);
-
-        $('.sales_tax_amount').val(tax || 0);
-
-        calculate_sales();
-    });
-
-    $('.sales_tax_amount').on('keyup',function(){
-
-        var tax = parseFloat($(this).val() || 0).toFixed(2); 
-        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
-        var discount = parseFloat($('.sales_discount_amount').val() || 0).toFixed(2);
-
-        var tax_percent = ((tax*100)/sub_total || 0).toFixed(2);
-
-        $('.sales_tax_percent').val(tax_percent || 0);
-
-        calculate_sales();
-
-    });
-
-    function calculate_sales() {
-        
-        var sum = 0;
-        
-        $(".stock_total").each(function(){
-            sum += +$(this).val();
-        });
-
-        $('.sales_total').val(sum);
-
-        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.sales_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
-
-        var discount = parseFloat( $('.sales_discount_amount').val() ).toFixed(2);
-
-        var tax = parseFloat( $('.sales_tax_amount').val() ).toFixed(2);
-
-        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
-
-        $('.grand_total').val( grand || '');
-
-    }
-
-    $('.purchase_discount_percent').on('keyup',function(){
-
-        var discount_percent = parseFloat($(this).val()).toFixed(2); 
-        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
-        var tax = parseFloat($('.purchase_tax_amount').val()).toFixed(2);
-        var discount = parseFloat( (sub_total * discount_percent)/100 ).toFixed(2);
-
-        $('.purchase_discount_amount').val(discount || 0);
-
-        calculate_purchase();
-
-    });
-
-    $('.purchase_discount_amount').on('keyup',function(){
-
-        var discount = parseFloat( $(this).val() ).toFixed(2); 
-        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
-        var tax = parseFloat( $('.purchase_tax_amount').val() ).toFixed(2);
-
-        var discount_percent = ((discount*100)/sub_total).toFixed(2);
-
-        $('.purchase_discount_percent').val(discount_percent || 0);
-
-        calculate_purchase();
-
-    });
-
-    $('.purchase_tax_percent').on('keyup',function(){
-
-        var tax_percent = parseFloat($(this).val()).toFixed(2); 
-        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
-        var discount = parseFloat($('.purchase_discount_amount').val()).toFixed(2);
-
-        var tax = parseFloat( (sub_total * tax_percent)/100 ).toFixed(2);
-
-        $('.purchase_tax_amount').val(tax || 0);
-
-        calculate_purchase();
-    });
-
-    $('.purchase_tax_amount').on('keyup',function(){
-
-        var tax = parseFloat($(this).val()).toFixed(2); 
-        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
-        var discount = parseFloat($('.purchase_discount_amount').val()).toFixed(2);
-
-        var tax_percent = ((tax*100)/sub_total).toFixed(2);
-
-        $('.purchase_tax_percent').val(tax_percent || 0);
-
-        calculate_purchase();
-
-    });
-
-    function calculate_purchase() {
-        
-        var sum = 0;
-        
-        $(".stock_total").each(function(){
-            sum += +$(this).val();
-        });
-
-        $('.purchase_total').val(sum);
-
-        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.purchase_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
-
-        var discount = parseFloat( $('.purchase_discount_amount').val() ).toFixed(2);
-
-        var tax = parseFloat( $('.purchase_tax_amount').val() ).toFixed(2);
-
-        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
-
-        $('.grand_total').val( grand || '');
-
-    }
 
     $('.change_supplier_name').on('change',function(){
 
@@ -367,7 +77,16 @@ $( document ).ready(function() {
         
     });
 
-    
+    $('.stock_id').on('change',function(){
+
+        $('.search_purchase_cost').val($(this).find(':selected').attr('purchase_cost'));
+        $('.search_selling_cost').val($(this).find(':selected').attr('selling_cost'));
+        $('.search_stock_quantity').val($(this).find(':selected').attr('opening_stock')).html('( '+$(this).find(':selected').attr('opening_stock')+' )');
+
+        $('.change_sales_quantity').attr('max',$(this).find(':selected').attr('opening_stock'));
+
+        var e = $.Event('keyup'); $('.change_purchase_quantity').trigger(e);
+    });
 
     $(function () {
 
@@ -470,10 +189,10 @@ $( document ).ready(function() {
 
         $('.grand_total').val($('.opening_due').val());
 
-        $('.stock_id,.purchase_stock_id').empty().append('<option selected="" disabled="" value="">- Select -</option>');
+        $('.stock_id').empty().append('<option selected="" disabled="" value="">- Select -</option>');
 
         $.each( ui.item.stocks , function( key, value ) {
-            $('.stock_id,.purchase_stock_id').append('<option title="'+value.title+'" purchase_cost="'+value.purchase_cost+'" selling_cost="'+value.selling_cost+'" opening_stock="'+value.opening_stock+'" value='+key+'>'+value.dimention+'</option>');
+            $('.stock_id').append('<option title="'+value.title+'" purchase_cost="'+value.purchase_cost+'" selling_cost="'+value.selling_cost+'" opening_stock="'+value.opening_stock+'" value='+key+'>'+value.dimention+'</option>');
             $('.stock_id_details').empty().html('( '+value.title+' )');
         });
 
@@ -512,9 +231,17 @@ $( document ).ready(function() {
       }
     });
 
-    
+    $('.search_purchase_cost').on('keyup',function(){
+       var e = $.Event('keyup'); $('.change_purchase_quantity').trigger(e);
+    });
 
-    
+    $('.search_selling_cost').on('keyup',function(){
+       var e = $.Event('keyup'); $('.change_sales_quantity').trigger(e);
+    });
+
+    $( ".search_supplier_name" ).on('keyup',function(){
+        $(".search_supplier_name_empty").hide();
+    });
 
     $( ".search_stock_name" ).autocomplete({
       source: "/search/stock_name",
@@ -548,7 +275,70 @@ $( document ).ready(function() {
         $(".search_stock_name_empty").hide();
     });
 
-    
+    $('.change_purchase_quantity').on('keyup',function(){
+
+        var purchase_quantity =  parseFloat( $(this).val() || 0 ).toFixed(2);
+        var purchase_cost =  parseFloat($('.search_purchase_cost').val() || 0).toFixed(2);
+        var opening_stock =  parseFloat($('.search_stock_quantity').val() || 0).toFixed(2);
+        var opening_balance =  parseFloat($('.opening_balance').val() || 0 ).toFixed(2);
+        var opening_due =  parseFloat($('.opening_due').val() || 0).toFixed(2);
+
+        var purchase_total = parseFloat(purchase_quantity * purchase_cost).toFixed(2);
+
+        $('.purchase_total').val(purchase_total);
+
+        var closing = parseFloat(purchase_quantity + opening_stock).toFixed(2);
+
+        $('.closing_stock').val(closing);
+
+        var grand_total = (parseFloat(purchase_total) + parseFloat(opening_due) - parseFloat(opening_balance)).toFixed(2);
+
+        $('.grand_total').val(grand_total);
+
+        var e = $.Event('keyup'); $('.purchase_payment,.sales_payment').trigger(e);
+
+    });
+
+    $('.change_sales_quantity').on('keyup',function(){
+
+        var sales_quantity =  parseFloat( $(this).val() || 0 ).toFixed(2);
+        var sales_cost =  parseFloat($('.search_selling_cost').val()).toFixed(2);
+        var opening_stock =  parseFloat($('.search_stock_quantity').val()).toFixed(2);
+        var sales_total = (parseFloat(sales_quantity) * parseFloat(sales_cost)).toFixed(2);
+        var grand_total = (parseFloat(sales_total) + parseFloat($('.opening_due').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        $('.sales_total').val(sales_total || '');
+
+        $('.closing_stock').val(opening_stock - sales_quantity);
+
+        $('.grand_total').val(grand_total || '');
+
+        if(grand_total < 0){
+
+            var closing = (parseFloat( $('.opening_balance').val() ) - sales_total + parseFloat( $('.opening_due').val() )).toFixed(2);
+
+            $('.closing_balance').val(closing);
+
+        }else{
+            $('.closing_due').val('');    
+        }
+        
+    });
+   
+    $('.change_sales_quantity').on('keyup change mouseout',function(){
+
+        var e = $.Event('keyup'); $('.sales_discount_percent,.sales_discount_amount,.sales_tax_percent,.sales_tax_amount,.purchase_payment').trigger(e);
+
+        if(  parseInt( $(this).val() ) >  parseInt( $(this).attr('max') ) ){
+            $(this).parent().addClass('has-error');
+            $(this).next().removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            $('.form_submit').hide();
+            $('.max_stock').show();
+        }else{
+            $('.form_submit').show();
+            $('.max_stock').hide();
+        }
+    });
 
     $('.sales_payment').on('keyup',function(){
 
@@ -564,7 +354,9 @@ $( document ).ready(function() {
         else{
             $('.closing_due').val(0);
             $('.closing_balance').val( (payment - grand_total) || 0);
-        }        
+        }
+
+        
     });
 
     $('.purchase_payment').on('keyup',function(){
@@ -620,6 +412,156 @@ $( document ).ready(function() {
 
     $( ".search_customer_name" ).on('keyup',function(){
         $(".search_customer_name_empty").hide();
+    });
+
+    $('.sales_discount_percent').on('keyup',function(){
+
+        var discount_percent = parseFloat( $(this).val() || 0).toFixed(2); 
+        var sub_total = parseFloat($('.sales_total').val()).toFixed(2);
+        var tax = parseFloat($('.sales_tax_amount').val()).toFixed(2);
+        var discount = parseFloat( (sub_total * discount_percent)/100 ).toFixed(2);
+
+        $('.sales_discount_amount').val(discount || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.sales_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
+    });
+
+    $('.sales_discount_amount').on('keyup',function(){
+
+        var discount = parseFloat($(this).val() || 0).toFixed(2); 
+        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
+        var tax = parseFloat($('.sales_tax_amount').val() || 0).toFixed(2);
+        var discount_percent = ((discount*100)/sub_total || 0).toFixed(2);
+
+        $('.sales_discount_percent').val(discount_percent || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.sales_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+        $('.grand_total').val( grand || '');
+
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
+    });
+
+    $('.sales_tax_percent').on('keyup',function(){
+
+        var tax_percent = parseFloat($(this).val() || 0).toFixed(2); 
+        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
+        var discount = parseFloat($('.sales_discount_amount').val() || 0).toFixed(2);
+
+        var tax = parseFloat( (sub_total * tax_percent)/100 || 0 ).toFixed(2);
+
+        $('.sales_tax_amount').val(tax || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.sales_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+    });
+
+    $('.sales_tax_amount').on('keyup',function(){
+
+        var tax = parseFloat($(this).val() || 0).toFixed(2); 
+        var sub_total = parseFloat($('.sales_total').val() || 0).toFixed(2);
+        var discount = parseFloat($('.sales_discount_amount').val() || 0).toFixed(2);
+
+        var tax_percent = ((tax*100)/sub_total || 0).toFixed(2);
+
+        $('.sales_tax_percent').val(tax_percent || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.sales_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
+    });
+
+    $('.purchase_discount_percent').on('keyup',function(){
+
+        var discount_percent = parseFloat($(this).val()).toFixed(2); 
+        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
+        var tax = parseFloat($('.purchase_tax_amount').val()).toFixed(2);
+        var discount = parseFloat( (sub_total * discount_percent)/100 ).toFixed(2);
+
+        $('.purchase_discount_amount').val(discount || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.purchase_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
+    });
+
+    $('.purchase_discount_amount').on('keyup',function(){
+
+        var discount = parseFloat( $(this).val() ).toFixed(2); 
+        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
+        var tax = parseFloat( $('.purchase_tax_amount').val() ).toFixed(2);
+
+        var discount_percent = ((discount*100)/sub_total).toFixed(2);
+
+        $('.purchase_discount_percent').val(discount_percent || 0);
+
+        var total = (parseFloat($('.opening_due').val()) + parseFloat($('.purchase_total').val()) - parseFloat($('.opening_balance').val())).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
+    });
+
+    $('.purchase_tax_percent').on('keyup',function(){
+
+        var tax_percent = parseFloat($(this).val()).toFixed(2); 
+        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
+        var discount = parseFloat($('.purchase_discount_amount').val()).toFixed(2);
+
+        var tax = parseFloat( (sub_total * tax_percent)/100 ).toFixed(2);
+
+        $('.purchase_tax_amount').val(tax || 0);
+
+        var total = ( parseFloat($('.opening_due').val()) + parseFloat($('.purchase_total').val()) - parseFloat($('.opening_balance').val()) ).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+    });
+
+    $('.purchase_tax_amount').on('keyup',function(){
+
+        var tax = parseFloat($(this).val()).toFixed(2); 
+        var sub_total = parseFloat($('.purchase_total').val()).toFixed(2);
+        var discount = parseFloat($('.purchase_discount_amount').val()).toFixed(2);
+
+        var tax_percent = ((tax*100)/sub_total).toFixed(2);
+
+        $('.purchase_tax_percent').val(tax_percent || 0);
+
+        var total = ( parseFloat($('.opening_due').val()) + parseFloat($('.purchase_total').val()) - parseFloat($('.opening_balance').val()) ).toFixed(2);
+
+        var grand = (parseFloat(total-discount) + parseFloat(tax)).toFixed(2);
+
+        $('.grand_total').val( grand || '');
+        var e = $.Event('keyup'); $('.purchase_payment').trigger(e);
+
     });
 
     /**/

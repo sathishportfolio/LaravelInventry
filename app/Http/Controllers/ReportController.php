@@ -53,8 +53,6 @@ class ReportController extends Controller
 
     		$transaction = \App\Models\PurchaseDetail::where('created_at','>=',$request['from'])->where('created_at','<=',$request['to'])->with('category')->with('supplier')->with('stock')->get();
 
-            // dd($transaction->toarray());
-
     		$total['purchase'] =\App\Models\PurchaseDetail::where('created_at','>=',$request['from'])->where('created_at','<=',$request['to'])->sum('purchase_total');
 
     		$total['payment'] =\App\Models\PurchaseDetail::where('created_at','>=',$request['from'])->where('created_at','<=',$request['to'])->sum('payment');

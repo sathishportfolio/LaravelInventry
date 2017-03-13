@@ -21,21 +21,13 @@ class PurchaseDetail extends Model
 
     protected $fillable = [
 
-        'stock_id',
-        'category_id',
-        'category_name',
         'supplier_id',
         'supplier_name',
         'supplier_address',
         'supplier_contact1',
         'opening_balance',
         'opening_due',
-        'purchase_quantity',
         'purchase_total',
-        'purchase_cost',
-        'selling_cost',
-        'opening_stock',
-        'closing_stock',
         'description',
         'grand_total',
         'payment',
@@ -43,7 +35,12 @@ class PurchaseDetail extends Model
         'closing_due',
         'mode',
         'billnumber',
-        'billdate'
+        'billdate',
+        'tax_description',
+        'tax_percent',
+        'tax_amount',
+        'discount_percent',
+        'discount_amount'
 
     ];
 

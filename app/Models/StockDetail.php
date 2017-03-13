@@ -30,6 +30,17 @@ class StockDetail extends Model
         'uom'
     ];
 
+    public function getSellingCostAttribute($value)
+    {
+        if($value){
+            return (float) $value;    
+        }else {
+            return '';
+        }
+        
+    }
+    
+
     protected $guarded = [];
 
     protected $dates = ['deleted_at'];

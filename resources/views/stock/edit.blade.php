@@ -94,6 +94,8 @@
 
                               @if($stock_details->supplier_id == 0)
                                   <option value="0" selected="">- Multiple suppliers -</option>
+                              @else
+                                  <option value="0">- Multiple suppliers -</option>    
                               @endif 
                                   
                               @foreach($supplier_details as $key1 => $value1)

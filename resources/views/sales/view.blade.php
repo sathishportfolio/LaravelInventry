@@ -75,37 +75,31 @@
                                data-search="true"
                                data-show-refresh="true"
                                data-show-toggle="true"
-                               data-sort-sales="desc">
+                               data-sort-name="sales_id"
+                               data-sort-order="desc">
                             <thead>
                             <tr>
                                 
                                 <th data-field="sales_id" data-align="center" data-sortable="true">Sales ID</th>
                                 
-                                <th data-field="category_name" data-align="center" data-sortable="true">Stock Category</th>
-
-                                <th data-field="stock.stock_name" data-align="center" data-sortable="true">Physical Quantity</th>
-                                
                                 <th data-field="customer_name" data-align="center" data-sortable="true">Customer</th>
+                                
+                                <th data-field="opening_due" data-align="center" data-sortable="true">Opening Due</th>
 
-                                <th data-field="purchase_cost" data-align="center" data-sortable="true">Purchase Cost</th>
+                                <th data-field="opening_balance" data-align="center" data-sortable="true">Opening Balance</th>
 
-                                <th data-field="selling_cost" data-align="center" data-sortable="true">Selling Cost</th>
-                                
-                                
-                                <th data-field="sales_quantity" data-align="center" data-sortable="true">Sales Quantity</th>
-                                
                                 <th data-field="sales_total" data-align="center" data-sortable="true">Sales Total</th>
 
                                 <th data-field="discount_amount" data-align="center" data-sortable="true">Discount</th>
 
                                 <th data-field="tax_amount" data-align="center" data-sortable="true">Tax</th>
 
-                                <th data-field="opening_balance" data-align="center" data-sortable="true">Opening Balance</th>
-
                                 <th data-field="grand_total" data-align="center" data-sortable="true">Grand total</th>
 
                                 <th data-field="payment" data-align="center" data-sortable="true">Payment</th>
                                 
+                                <th data-field="closing_due" data-align="center" data-sortable="true">Closing Due</th>
+
                                 <th data-field="closing_balance" data-align="center" data-sortable="true">Closing Balance</th>
 
                                 <th data-field="mode" data-align="center" data-formatter="modeFormatter" data-sortable="true">Mode</th>

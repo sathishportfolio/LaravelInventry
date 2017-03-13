@@ -16,19 +16,22 @@ class CreatePurchaseDetailsTable extends Migration
         Schema::create('purchase_details', function(Blueprint $table)
         {
             $table->increments('purchase_id');
-            $table->integer('stock_id');
-            $table->integer('category_id');
             $table->integer('supplier_id');
+            $table->string('supplier_name', 260);
             $table->string('supplier_address', 260);
             $table->biginteger('supplier_contact1');
             $table->float('opening_due',10,2)->unsigned();
             $table->float('opening_balance',10,2)->unsigned();
-            $table->integer('purchase_quantity')->unsigned();
+            
             $table->float('purchase_total',10,2)->unsigned();
-            $table->float('purchase_cost',10,2)->unsigned()->nullable()->default(0);
-            $table->float('selling_cost',10,2)->unsigned()->nullable()->default(0);
-            $table->integer('opening_stock')->unsigned();
-            $table->integer('closing_stock')->unsigned();
+            
+            $table->float('discount_percent',10,2)->unsigned();
+            $table->float('discount_amount',10,2)->unsigned();
+            
+            $table->string('tax_description',255)->nullable();
+            $table->float('tax_percent',10,2)->unsigned();
+            $table->float('tax_amount',10,2)->unsigned();
+
             $table->string('description',255)->nullable();
             $table->float('grand_total',10,2)->unsigned();
             $table->float('payment',10,2)->unsigned();

@@ -41,7 +41,6 @@ class PurchaseController extends Controller
 
         $rows = \App\Models\PurchaseDetail::where(function($query) use($request){
                       $query->orwhere('purchase_id','like',$request['search'])
-                      ->orwhere('category_name','like',$request['search'])
                       ->orwhere('supplier_name','like',$request['search']);
                   })->with('stock')->with('supplier')->with('category')->orderBy($request['sort'],$request['order'])
                     ->skip($request['offset'])
@@ -50,7 +49,6 @@ class PurchaseController extends Controller
 
         $total = \App\Models\PurchaseDetail::where(function($query) use($request){
                       $query->orwhere('purchase_id','like',$request['search'])
-                      ->orwhere('category_name','like',$request['search'])
                       ->orwhere('supplier_name','like',$request['search']);
                   })->count();
 
@@ -81,15 +79,36 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+
+        $data = $request->all();
+
+        $purchase_product = array();
+
+        unset($request['category_name'],$request['category_id'],$request['stock_id'],$request['purchase_cost'],$request['selling_cost'],$request['opening_stock'],$request['closing_stock'],$request['purchase_quantity'],$request['sub_total']);
 
         $PurchaseDetail = \App\Models\PurchaseDetail::create($request->all());
 
-        // dd($PurchaseDetail->toarray());
+        foreach ($data['stock_id'] as $key => $value) {
+            
+            $purchase_product[$key]['purchase_id'] = $PurchaseDetail->purchase_id;
+            $purchase_product[$key]['stock_id'] = $value;
+            $purchase_product[$key]['category_name'] = $data['category_name'][$key];
+            $purchase_product[$key]['category_id'] = $data['category_id'][$key];
+            $purchase_product[$key]['purchase_cost'] = $data['purchase_cost'][$key];
+            $purchase_product[$key]['opening_stock'] = $data['opening_stock'][$key];
+            $purchase_product[$key]['closing_stock'] = $data['closing_stock'][$key];
+            $purchase_product[$key]['purchase_quantity'] = $data['purchase_quantity'][$key];
+            $purchase_product[$key]['sub_total'] = $data['sub_total'][$key];
+        }
 
-        \App\Models\StockDetail::where('stock_id',$request['stock_id'])->update(['stock_quantity'=>$request['closing_stock'],'purchase_cost'=>$request['purchase_cost'],'selling_cost'=>$request['selling_cost']]);
+        $SalesProduct = \App\Models\PurchaseProductList::insert($purchase_product);
 
-        \App\Models\SupplierDetail::where('id',$request['supplier_id'])
+        foreach ($purchase_product as $key => $value) {
+         
+         \App\Models\StockDetail::where('stock_id',$value['stock_id'])->update(['stock_quantity'=>$value['closing_stock']]);   
+        }
+
+        $SupplierDetail =  \App\Models\SupplierDetail::where('id',$request['supplier_id'])
                                     ->update([
                                         'balance'=>$request['closing_balance'],
                                         'due'=>$request['closing_due']
@@ -105,9 +124,7 @@ class PurchaseController extends Controller
                                     'balance'=>$PurchaseDetail->closing_balance,
                                     'due'=>$PurchaseDetail->closing_due,
                                     'mode'=>$PurchaseDetail->mode,
-                                ];    
-
-                                // dd($transaction_details);                              
+                                ];                               
 
         \App\Models\Transaction::create($transaction_details);                                     
 

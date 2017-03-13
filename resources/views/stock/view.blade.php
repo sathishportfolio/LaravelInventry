@@ -74,7 +74,8 @@
                                data-show-refresh="true"
                                data-show-toggle="true"
                                data-show-columns="true"
-                               data-sort-stock="desc">
+                               data-sort-name="stock_id"
+                               data-sort-order="desc">
                             <thead>
                             <tr>
                                 <th data-field="stock_id" data-align="center" data-sortable="true">Stock ID</th>

@@ -106,8 +106,8 @@
               <tr>
                 <td>{{ $value->purchase_id }}</td>
                 <td>{{ \Carbon\Carbon::parse($value->created_at)->format('jS M Y') }}</td>
-                <td>{{ $value->category->category_name }}</td>
-                <td>{{ $value->stock->stock_name }}</td>
+                {{-- <td>{{ $value->category->category_name }}</td> --}}
+                {{-- <td>{{ $value->stock->stock_name }}</td> --}}
                 <td>{{ $value->purchase_quantity }}</td>
                 <td>{{ $value->opening_stock }}</td>
                 <td>{{ $value->closing_stock }}</td>

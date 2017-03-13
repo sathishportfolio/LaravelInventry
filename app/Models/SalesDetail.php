@@ -19,21 +19,14 @@ class SalesDetail extends Model
 	public $timestamps = true;
 
     protected $fillable = [
-        'stock_id',
-        'category_id',
-        'category_name',
+        
         'customer_id',
         'customer_name',
         'customer_address',
         'customer_contact1',
         'opening_balance',
         'opening_due',
-        'sales_quantity',
-        'purchase_cost',
-        'selling_cost',
         'sales_total',
-        'opening_stock',
-        'closing_stock',
         'discount_percent',
         'discount_amount',
         'tax_description',
@@ -48,6 +41,15 @@ class SalesDetail extends Model
         'billnumber',
         'billdate'
     ];
+
+    /*'stock_id',
+    'category_id',
+    'category_name',
+    'purchase_cost',
+    'selling_cost',
+    'opening_stock',
+    'closing_stock',
+    'sales_quantity',*/
 
     protected $guarded = [];
 

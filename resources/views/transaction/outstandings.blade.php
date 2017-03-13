@@ -75,7 +75,8 @@
                                {{-- data-search="true" --}}
                                data-show-refresh="true"
                                data-show-toggle="true"
-                               data-sort-sales="desc">
+                               data-sort-name="id"
+                               data-sort-order="desc">
                             <thead>
                             <tr>
                                 

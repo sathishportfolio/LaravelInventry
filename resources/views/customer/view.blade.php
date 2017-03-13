@@ -71,7 +71,8 @@
                                data-search="true"
                                data-show-refresh="true"
                                data-show-toggle="true"
-                               data-sort-customer="desc">
+                               data-sort-name="id"
+                               data-sort-order="desc">
                             <thead>
                             <tr>
                                 <th data-field="id" data-align="center" data-sortable="true">Customer ID</th>

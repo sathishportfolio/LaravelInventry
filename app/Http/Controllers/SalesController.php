@@ -40,7 +40,7 @@ class SalesController extends Controller
 
         $rows = \App\Models\SalesDetail::where(function($query) use($request){
                       $query->orwhere('sales_id','like',$request['search'])
-                      ->orwhere('category_name','like',$request['search'])
+                      
                       ->orwhere('customer_name','like',$request['search']);
                   })->with('stock')->with('customer')->with('category')->orderBy($request['sort'],$request['order'])
                     ->skip($request['offset'])
@@ -49,7 +49,7 @@ class SalesController extends Controller
 
         $total = \App\Models\SalesDetail::where(function($query) use($request){
                       $query->orwhere('sales_id','like',$request['search'])
-                      ->orwhere('category_name','like',$request['search'])
+                      
                       ->orwhere('customer_name','like',$request['search']);
                   })->count();
 
@@ -80,14 +80,34 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $request->all();
 
-        // dd($request->all());
+        $sales_product = array();
 
-        unset($request['stock_name']);
+        unset($request['category_name'],$request['category_id'],$request['stock_id'],$request['purchase_cost'],$request['selling_cost'],$request['opening_stock'],$request['closing_stock'],$request['sales_quantity']);
 
         $SalesDetail = \App\Models\SalesDetail::create($request->all());
 
-        $StockDetail = \App\Models\StockDetail::where('stock_id',$request['stock_id'])->update(['stock_quantity'=>$request['closing_stock']]);
+        foreach ($data['stock_id'] as $key => $value) {
+            
+            $sales_product[$key]['sales_id'] = $SalesDetail->sales_id;
+            $sales_product[$key]['stock_id'] = $value;
+            $sales_product[$key]['category_name'] = $data['category_name'][$key];
+            $sales_product[$key]['category_id'] = $data['category_id'][$key];
+            $sales_product[$key]['purchase_cost'] = $data['purchase_cost'][$key];
+            $sales_product[$key]['selling_cost'] = $data['selling_cost'][$key];
+            $sales_product[$key]['opening_stock'] = $data['opening_stock'][$key];
+            $sales_product[$key]['closing_stock'] = $data['closing_stock'][$key];
+            $sales_product[$key]['sales_quantity'] = $data['sales_quantity'][$key];
+            $sales_product[$key]['sub_total'] = $data['sub_total'][$key];
+        }
+
+        $SalesProduct = \App\Models\SalesProductList::insert($sales_product);
+
+        foreach ($sales_product as $key => $value) {
+         
+         \App\Models\StockDetail::where('stock_id',$value['stock_id'])->update(['stock_quantity'=>$value['closing_stock']]);   
+        }
 
         $CustomerDetail = \App\Models\CustomerDetail::where('id',$request['customer_id'])
                                   ->update([

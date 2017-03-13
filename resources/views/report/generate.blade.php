@@ -54,7 +54,7 @@
                               <option selected="" disabled="" value="">- Select -</option>
                               <option value="1">Purchase</option>
                               <option value="2">Sales</option>
-                              <option value="3">Purchase Stock</option>
+                              {{-- <option value="3">Purchase Stock</option> --}}
                             </select>
                           </div>
                         </div>

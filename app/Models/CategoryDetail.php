@@ -17,6 +17,7 @@ class CategoryDetail extends Model
         'category_name'
     ];
 
+    
     protected $guarded = [];
 
     public function units(){

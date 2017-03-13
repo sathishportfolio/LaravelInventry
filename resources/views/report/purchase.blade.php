@@ -39,7 +39,7 @@
               <option selected="" disabled="" value="">- Select -</option>
               <option value="1" @if($data['report_type'] == 1) selected="" @endif>Purchase</option>
               <option value="2" @if($data['report_type'] == 2) selected="" @endif>Sales</option>
-              <option value="3"  @if($data['report_type'] == 3) selected="" @endif>Purchase Stock</option>
+              {{-- <option value="3"  @if($data['report_type'] == 3) selected="" @endif>Purchase Stock</option> --}}
             </select>
         </div>      
       </div>

@@ -53,7 +53,8 @@
                                data-search="true"
                                data-show-refresh="true"
                                data-show-toggle="true"
-                               data-sort-stock_category="desc">
+                               data-sort-name="stock_id"
+                               data-sort-order="desc">
                             <thead>
                             <tr>
                                 <th data-field="stock_id" data-align="center" data-sortable="true">Stock ID</th>

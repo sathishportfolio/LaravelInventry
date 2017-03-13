@@ -43,8 +43,6 @@
                                 <label>Customer Name</label>
                                 <input type="text" class="form-control search_customer_name" placeholder="Type here ..." name="customer_name">
                                 <span class="help-block search_customer_name_empty" style="display: none;">No Results Found ...</span>
-
-                                <span class="help-block search_purchase_category_name_empty" style="display: none;">No Results Found ...</span>
                                 <input type="hidden" class="search_customer_id" name="customer_id">
                               </div>
                             </div>
@@ -84,61 +82,56 @@
 
                           <div class="box-body">
                             
-                            <table class="table table-striped">
-                              <thead>
-                                <tr>
-                                  <th>Stock Catagory</th>
-                                  <th>Physical Quantity</th>
-                                  <th>Purchase cost / Unit</th>
-                                  <th>Selling cost / Unit</th>
-                                  <th>No.of.Units</th>
-                                  <th>Total</th>
-                                </tr>
-                              </thead>
-                              <tbody class="sales_container">
-                                <tr>
-                                  <td>
-                                    <input type="text" class="form-control search_purchase_category_name" placeholder="Type here ..." name="category_name[]" autocomplete="off">
-                                    <span class="help-block search_purchase_category_name_empty glyphicon" style="display: none;"> No Results Found </span>
-                                    <input type="hidden" class="search_category_id" name="category_id[]">
-                                  </td>
-                                  <td width="250px">
-                                    <select class="form-control stock_id" name="stock_id[]">
-                                      <option selected="" disabled="" value="">select</option>
-                                    </select>
-                                    <span class="search_stock_quantity"></span>
-                                  </td>
-                                  <td width="200px">
-                                    <input type="text" class="form-control search_purchase_cost" name="purchase_cost[]" readonly="">
-                                  </td>
-                                  <td width="150px">
-                                    <input type="text" class="form-control search_selling_cost" name="selling_cost[]" >
-                                  </td>
-                                  
-                                  <td width="50px">
-                                    <input type="hidden" class="search_stock_quantity" name="opening_stock[]">
-                                    <input type="hidden" class="closing_stock" name="closing_stock[]">
+                            <div class="row">
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label>Stock Catagory</label><br>
+                                  <input type="text" class="form-control search_purchase_category_name" placeholder="Type here ..." name="category_name" autocomplete="off">
+                                  <span class="help-block search_purchase_category_name_empty" style="display: none;">No Results Found ...</span>
+                                  <input type="hidden" class="search_category_id" name="category_id">
+                                </div>
+                              </div>
 
-                                    <input type="number" class="form-control change_sales_quantity" name="sales_quantity[]" min="1">
-                                    <small class="help-block max_stock" style="display: none;">Insufficient Stock</small>
-                                  </td>
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label>Physical Quantity </label><br>
+                                  <select class="form-control stock_id" name="stock_id">
+                                    <option selected="" disabled="" value="">select</option>
+                                  </select>
+                                  {{-- <span class="stock_id_details help-block"></span> --}}
+                                </div>
+                              </div>
 
-                                  <td width="100px">
-                                    <input type="text" class="form-control stock_total" name="sub_total[]"  readonly="">
-                                  </td>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label>Purchase cost / Unit</label><br>
+                                  <input type="text" class="form-control search_purchase_cost" name="purchase_cost" readonly="">
+                                </div>
+                              </div>
 
-                                  <td><button type="button" class="btn btn-danger remove_tr">&times;</button></td>
-                                </tr>
-                              </tbody>
-                              <tfoot>
-                                <tr>
-                                  <td colspan="3">
-                                    <button type="button" class="btn btn-primary add_sales_product"><i class="fa fa-plus"></i> Add More</button>
-                                  </td>
-                                  <td></td>
-                                </tr>
-                              </tfoot>
-                            </table>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label>Selling cost / Unit</label><br>
+                                  <input type="text" class="form-control search_selling_cost" name="selling_cost" >
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label>No.of.Units <span class="search_stock_quantity"></span> </label><br>
+
+                                  <input type="hidden" class="search_stock_quantity" name="opening_stock">
+                                  <input type="hidden" name="closing_stock" class="closing_stock">
+
+                                  <input type="number" class="form-control change_sales_quantity" name="sales_quantity" min="1">
+                                  <small class="help-block max_stock" style="display: none;">Insufficient Stock</small>
+                                </div>  
+                              </div>
+                            </div>
+
+                            <div>
+                              <a href=""><i class="fa fa-plus"></i> Add More</a>
+                            </div>
 
                             <div class="row">
                               <div class="col-md-offset-8 col-md-4">
